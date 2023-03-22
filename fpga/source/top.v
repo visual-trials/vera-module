@@ -1073,6 +1073,8 @@ module top(
     wire [5:0] video_composite_luma, video_composite_chroma;
     wire [3:0] video_rgb_r, video_rgb_g, video_rgb_b;
     wire       video_rgb_sync_n;
+    wire       video_rgb_hsync;
+    wire       video_rgb_vsync;
     wire [5:0] video_composite_chroma2 = chroma_disable_r ? 6'd0 : video_composite_chroma;
 
     video_composite video_composite(
@@ -1097,7 +1099,9 @@ module top(
         .rgb_r(video_rgb_r),
         .rgb_g(video_rgb_g),
         .rgb_b(video_rgb_b),
-        .rgb_sync_n(video_rgb_sync_n));
+        .rgb_sync_n(video_rgb_sync_n),
+        .rgb_hsync(video_rgb_hsync),
+        .rgb_vsync(video_rgb_vsync));
 
     //////////////////////////////////////////////////////////////////////////
     // VGA video
@@ -1158,8 +1162,13 @@ module top(
             vga_r     <= video_rgb_r;
             vga_g     <= video_rgb_g;
             vga_b     <= video_rgb_b;
-            vga_hsync <= video_rgb_sync_n;
-            vga_vsync <= 0;
+            if (chroma_disable_r) begin
+                vga_hsync <= video_rgb_hsync;
+                vga_vsync <= video_rgb_vsync;
+            end else begin
+                vga_hsync <= video_rgb_sync_n;
+                vga_vsync <= 1'b0;
+            end
         end
 
         default: begin

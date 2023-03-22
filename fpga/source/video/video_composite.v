@@ -23,15 +23,17 @@ module video_composite(
     output wire  [3:0] rgb_r,
     output wire  [3:0] rgb_g,
     output wire  [3:0] rgb_b,
-    output wire        rgb_sync_n);
+    output wire        rgb_sync_n,
+    output wire        rgb_hsync,
+    output wire        rgb_vsync);
 
     //
     // Video timing (NTSC 60Hz)
     //
     parameter H_SYNC            = 118;
-    parameter H_BACK_PORCH      = 152;
+    parameter H_BACK_PORCH      = 152 - (152-118);
     parameter H_ACTIVE          = 1280;
-    parameter H_FRONT_PORCH     = 38;
+    parameter H_FRONT_PORCH     = 38 + (152-118);
     parameter H_TOTAL           = H_SYNC + H_BACK_PORCH + H_ACTIVE + H_FRONT_PORCH;
 
     parameter H_HALF                   = H_TOTAL / 2;
@@ -102,6 +104,10 @@ module video_composite(
     wire v_active =
         (vcnt >=   38+4 && vcnt <=  (524+line_mode)-3) ||   // 240 lines
         (vcnt >=  563+5 && vcnt <= (1049+line_mode)-2);     // 240 lines
+
+    wire v_burst_active =
+        (vcnt >=   38+4-20 && vcnt <=  (524+line_mode)-3) ||   // 240 lines
+        (vcnt >=  563+5-20 && vcnt <= (1049+line_mode)-2);     // 240 lines
 
     reg field; // 0: even, 1: odd
 
@@ -184,7 +190,7 @@ module video_composite(
         .r(r),
         .g(g),
         .b(b),
-        .color_burst(v_active && h_color_burst),
+        .color_burst(v_burst_active && h_color_burst),
         .active(v_active && h_active),
         .sync_n_in(mod_sync_n),
 
@@ -195,5 +201,7 @@ module video_composite(
     assign rgb_g = g;
     assign rgb_b = b;
     assign rgb_sync_n = mod_sync_n;
+    assign rgb_hsync = !h_hsync_pulse;
+    assign rgb_vsync = !v_sync;
 
 endmodule
