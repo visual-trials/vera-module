@@ -447,7 +447,7 @@ module top(
                 5'h0A: begin
                     if (dc_select_r == 0) begin
                         dc_hscale_next            = write_data;
-                    end else begin
+                    end else if (dc_select_r == 1) begin
                         dc_active_hstop_next[9:2] = write_data;
                         dc_active_hstop_next[1:0] = 0;
                     end
@@ -455,7 +455,7 @@ module top(
                 5'h0B: begin
                     if (dc_select_r == 0) begin
                         dc_vscale_next             = write_data;
-                    end else begin
+                    end else if (dc_select_r == 1) begin
                         dc_active_vstart_next[8:1] = write_data;
                         dc_active_vstart_next[0]   = 0;
                     end
@@ -463,7 +463,7 @@ module top(
                 5'h0C: begin
                     if (dc_select_r == 0) begin
                         dc_border_color_next      = write_data;
-                    end else begin
+                    end else if (dc_select_r == 1) begin
                         dc_active_vstop_next[8:1] = write_data;
                         dc_active_vstop_next[0]   = 0;
                     end
