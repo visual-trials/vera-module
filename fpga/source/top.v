@@ -55,7 +55,7 @@ module top(
     reg        vram_addr_select_r,            vram_addr_select_next;
     reg  [7:0] vram_data0_r,                  vram_data0_next;
     reg  [7:0] vram_data1_r,                  vram_data1_next;
-    reg        dc_select_r,                   dc_select_next;
+    reg  [5:0] dc_select_r,                   dc_select_next;
     reg        fpga_reconfigure_r,            fpga_reconfigure_next;
     reg        irq_enable_vsync_r,            irq_enable_vsync_next;
     reg        irq_enable_line_r,             irq_enable_line_next;
@@ -140,38 +140,46 @@ module top(
         5'h02: rddata = vram_addr_select_r ? {vram_addr_incr_1_r, vram_addr_decr_1_r, 2'b0, vram_addr_1_r[16]} : {vram_addr_incr_0_r, vram_addr_decr_0_r, 2'b0, vram_addr_0_r[16]};
         5'h03: rddata = vram_data0_r;
         5'h04: rddata = vram_data1_r;
-        5'h05: rddata = {6'b0, dc_select_r, vram_addr_select_r};
+        5'h05: rddata = {1'b0, dc_select_r, vram_addr_select_r};
 
         5'h06: rddata = {irq_line_r[8], scanline[8], 2'b0, irq_enable_audio_fifo_low_r, irq_enable_sprite_collision_r, irq_enable_line_r, irq_enable_vsync_r};
         5'h07: rddata = {sprite_collisions,   audio_fifo_low,              irq_status_sprite_collision_r, irq_status_line_r, irq_status_vsync_r};
         5'h08: rddata = scanline[7:0];
 
         5'h09: begin
-            if (dc_select_r == 0) begin
+            if (dc_select_r == 6'h0) begin
                 rddata = {current_field, sprites_enabled_r, l1_enabled_r, l0_enabled_r, line_interlace_mode_r, chroma_disable_r, video_output_mode_r};
-            end else begin
+            end else if (dc_select_r == 6'h1) begin
                 rddata = dc_active_hstart_r[9:2];
+            end else begin
+                rddata = "V";
             end
         end
         5'h0A: begin
-            if (dc_select_r == 0) begin
+            if (dc_select_r == 6'h0) begin
                 rddata = dc_hscale_r;
-            end else begin
+            end else if (dc_select_r == 6'h1) begin
                 rddata = dc_active_hstop_r[9:2];
+            end else begin
+                rddata = 8'h00;
             end
         end
         5'h0B: begin
-            if (dc_select_r == 0) begin
+            if (dc_select_r == 6'h0) begin
                 rddata = dc_vscale_r;
-            end else begin
+            end else if (dc_select_r == 6'h1) begin
                 rddata = dc_active_vstart_r[8:1];
+            end else begin
+                rddata = 8'h01;
             end
         end
         5'h0C: begin
-            if (dc_select_r == 0) begin
+            if (dc_select_r == 6'h0) begin
                 rddata = dc_border_color_r;
-            end else begin
+            end else if (dc_select_r == 6'h1) begin
                 rddata = dc_active_vstop_r[8:1];
+            end else begin
+                rddata = 8'h01;
             end
         end
 
@@ -404,7 +412,7 @@ module top(
                 end
                 5'h05: begin
                     fpga_reconfigure_next = write_data[7];
-                    dc_select_next        = write_data[1];
+                    dc_select_next        = write_data[6:1];
                     vram_addr_select_next = write_data[0];
                 end
 
