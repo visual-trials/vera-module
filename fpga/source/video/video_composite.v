@@ -25,7 +25,7 @@ module video_composite(
     output wire  [3:0] rgb_b,
     output wire        rgb_sync_n,
     output wire        rgb_hsync,
-    output wire        rgb_vsync);
+    output wire        rgb_vsync) /* synthesis syn_hier = "hard" */;
 
     //
     // Video timing (NTSC 60Hz)
