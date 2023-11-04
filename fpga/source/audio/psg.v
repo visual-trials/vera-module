@@ -12,8 +12,8 @@ module psg(
     input  wire        next_sample,
 
     // Audio output
-    output wire [15:0] left_audio,
-    output wire [15:0] right_audio) /* synthesis syn_hier = "hard" */;
+    output wire [18:0] left_audio,
+    output wire [18:0] right_audio) /* synthesis syn_hier = "hard" */;
 
 
     //////////////////////////////////////////////////////////////////////////
@@ -146,8 +146,8 @@ module psg(
     //////////////////////////////////////////////////////////////////////////
     // Audio generator state machine
     //////////////////////////////////////////////////////////////////////////
-    reg signed [15:0] left_sample_r, right_sample_r;
-    reg signed [15:0] left_accum_r,  right_accum_r;
+    reg signed [18:0] left_sample_r, right_sample_r;
+    reg signed [18:0] left_accum_r,  right_accum_r;
 
     parameter
         IDLE     = 2'b00,
@@ -198,8 +198,8 @@ module psg(
                 end
 
                 CALC_CH: begin
-                    if (cur_left_en)  left_accum_r  <= left_accum_r  + scaled_signal[14:3];
-                    if (cur_right_en) right_accum_r <= right_accum_r + scaled_signal[14:3];
+                    if (cur_left_en)  left_accum_r  <= left_accum_r  + scaled_signal;
+                    if (cur_right_en) right_accum_r <= right_accum_r + scaled_signal;
 
                     working_data_wridx_r <= cur_channel_r;
                     working_data_wren_r  <= 1;
