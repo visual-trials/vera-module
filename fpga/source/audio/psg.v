@@ -80,7 +80,7 @@ module psg(
             4'd10:   cur_volume_base = 9'd482;
             default: cur_volume_base = 9'd511;
         endcase
-        cur_volume_log = cur_volume_base >> cur_volume_shift[4:2];
+        cur_volume_log = (cur_volume == 6'd0) ? 9'd0 : (cur_volume_base >> cur_volume_shift[4:2]);
     end
 
     //////////////////////////////////////////////////////////////////////////
