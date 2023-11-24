@@ -24,7 +24,7 @@ module pcm(
 
     // Audio output
     output wire [15:0] left_audio,
-    output wire [15:0] right_audio) /* synthesis syn_hier = "hard" */;
+    output wire [15:0] right_audio);
 
 
     //////////////////////////////////////////////////////////////////////////
