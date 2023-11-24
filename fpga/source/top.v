@@ -137,6 +137,8 @@ module top(
     reg        audio_mode_stereo_r,           audio_mode_stereo_next;
     reg        audio_mode_16bit_r,            audio_mode_16bit_next;
     reg        audio_fifo_reset_r,            audio_fifo_reset_next;
+    reg        audio_fifo_restart_r,          audio_fifo_restart_next;
+    reg        audio_fifo_loop_r,             audio_fifo_loop_next;
     wire       audio_fifo_full;
     reg  [3:0] audio_pcm_volume_r,            audio_pcm_volume_next;
     reg  [7:0] audio_fifo_wrdata_r,           audio_fifo_wrdata_next;
@@ -316,6 +318,8 @@ module top(
         audio_mode_stereo_next           = audio_mode_stereo_r;
         audio_mode_16bit_next            = audio_mode_16bit_r;
         audio_fifo_reset_next            = 0;
+        audio_fifo_restart_next          = 0;
+        audio_fifo_loop_next             = audio_fifo_loop_r;
         audio_pcm_volume_next            = audio_pcm_volume_r;
         audio_fifo_wrdata_next           = audio_fifo_wrdata_r;
         audio_fifo_write_next            = 0;
@@ -469,7 +473,9 @@ module top(
         end
 
         if (do_write && access_addr == 5'h1B) begin
-            audio_fifo_reset_next       = write_data[7];
+            audio_fifo_reset_next       = write_data[7:6] == 2'b10;
+            audio_fifo_restart_next     = write_data[6];
+            audio_fifo_loop_next        = write_data[7:6] == 2'b11;
             audio_mode_16bit_next       = write_data[5];
             audio_mode_stereo_next      = write_data[4];
             audio_pcm_volume_next       = write_data[3:0];
@@ -539,6 +545,8 @@ module top(
             audio_mode_stereo_r           <= 0;
             audio_mode_16bit_r            <= 0;
             audio_fifo_reset_r            <= 0;
+            audio_fifo_restart_r          <= 0;
+            audio_fifo_loop_r             <= 0;
             audio_pcm_volume_r            <= 0;
             audio_fifo_wrdata_r           <= 0;
             audio_fifo_write_r            <= 0;
@@ -597,6 +605,8 @@ module top(
             audio_mode_stereo_r           <= audio_mode_stereo_next;
             audio_mode_16bit_r            <= audio_mode_16bit_next;
             audio_fifo_reset_r            <= audio_fifo_reset_next;
+            audio_fifo_restart_r          <= audio_fifo_restart_next;
+            audio_fifo_loop_r             <= audio_fifo_loop_next;
             audio_pcm_volume_r            <= audio_pcm_volume_next;
             audio_fifo_wrdata_r           <= audio_fifo_wrdata_next;
             audio_fifo_write_r            <= audio_fifo_write_next;
@@ -1177,6 +1187,8 @@ module top(
 
         // Audio FIFO interface
         .fifo_reset(audio_fifo_reset_r),
+        .fifo_restart(audio_fifo_restart_r),
+        .fifo_loop(audio_fifo_loop_r),
         .fifo_wrdata(audio_fifo_wrdata_r),
         .fifo_write(audio_fifo_write_r),
         .fifo_full(audio_fifo_full),
