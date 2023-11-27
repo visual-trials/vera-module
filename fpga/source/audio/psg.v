@@ -49,7 +49,7 @@ module psg(
     reg [8:0] cur_volume_base;
     always @* begin
         case (cur_volume[5:2])
-            4'd0:  cur_volume_shift = 5'd20;
+            4'd0:  cur_volume_shift = 5'd22;
             4'd1:  cur_volume_shift = 5'd16;
             4'd2:  cur_volume_shift = 5'd17;
             4'd3:  cur_volume_shift = 5'd18;
