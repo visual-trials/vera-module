@@ -45,46 +45,72 @@ module psg(
 
     // Logarithmic volume conversion (0.5dB per step)
     reg [8:0] cur_volume_log;
-    reg [4:0] cur_volume_shift;
-    reg [8:0] cur_volume_base;
     always @* begin
-        case (cur_volume[5:2])
-            4'd0:  cur_volume_shift = 5'd22;
-            4'd1:  cur_volume_shift = 5'd16;
-            4'd2:  cur_volume_shift = 5'd17;
-            4'd3:  cur_volume_shift = 5'd18;
-            4'd4:  cur_volume_shift = 5'd12;
-            4'd5:  cur_volume_shift = 5'd13;
-            4'd6:  cur_volume_shift = 5'd14;
-            4'd7:  cur_volume_shift = 5'd8;
-            4'd8:  cur_volume_shift = 5'd9;
-            4'd9:  cur_volume_shift = 5'd10;
-            4'd10: cur_volume_shift = 5'd4;
-            4'd11: cur_volume_shift = 5'd5;
-            4'd12: cur_volume_shift = 5'd6;
-            4'd13: cur_volume_shift = 5'd0;
-            4'd14: cur_volume_shift = 5'd1;
-            4'd15: cur_volume_shift = 5'd2;
-        endcase
-        case ({cur_volume_shift[1:0], cur_volume[1:0]})
-            4'd0:    cur_volume_base = 9'd270;
-            4'd1:    cur_volume_base = 9'd286;
-            4'd2:    cur_volume_base = 9'd303;
-            4'd3:    cur_volume_base = 9'd321;
-            4'd4:    cur_volume_base = 9'd341;
-            4'd5:    cur_volume_base = 9'd361;
-            4'd6:    cur_volume_base = 9'd382;
-            4'd7:    cur_volume_base = 9'd405;
-            4'd8:    cur_volume_base = 9'd429;
-            4'd9:    cur_volume_base = 9'd455;
-            4'd10:   cur_volume_base = 9'd482;
-            default: cur_volume_base = 9'd511;
-        endcase
         case (cur_volume)
-            6'd0:    cur_volume_log = 9'd0;
-            6'd1:    cur_volume_log = 9'd13;
-            6'd2:    cur_volume_log = 9'd14;
-            default: cur_volume_log = cur_volume_base >> cur_volume_shift[4:2];
+            6'd0  : cur_volume_log = 9'd0;
+            6'd1  : cur_volume_log = 9'd13;
+            6'd2  : cur_volume_log = 9'd14;
+            6'd3  : cur_volume_log = 9'd15;
+            6'd4  : cur_volume_log = 9'd16;
+            6'd5  : cur_volume_log = 9'd17;
+            6'd6  : cur_volume_log = 9'd18;
+            6'd7  : cur_volume_log = 9'd20;
+            6'd8  : cur_volume_log = 9'd21;
+            6'd9  : cur_volume_log = 9'd22;
+            6'd10 : cur_volume_log = 9'd23;
+            6'd11 : cur_volume_log = 9'd25;
+            6'd12 : cur_volume_log = 9'd26;
+            6'd13 : cur_volume_log = 9'd28;
+            6'd14 : cur_volume_log = 9'd30;
+            6'd15 : cur_volume_log = 9'd31;
+            6'd16 : cur_volume_log = 9'd33;
+            6'd17 : cur_volume_log = 9'd35;
+            6'd18 : cur_volume_log = 9'd37;
+            6'd19 : cur_volume_log = 9'd40;
+            6'd20 : cur_volume_log = 9'd42;
+            6'd21 : cur_volume_log = 9'd45;
+            6'd22 : cur_volume_log = 9'd47;
+            6'd23 : cur_volume_log = 9'd50;
+            6'd24 : cur_volume_log = 9'd53;
+            6'd25 : cur_volume_log = 9'd56;
+            6'd26 : cur_volume_log = 9'd60;
+            6'd27 : cur_volume_log = 9'd63;
+            6'd28 : cur_volume_log = 9'd67;
+            6'd29 : cur_volume_log = 9'd71;
+            6'd30 : cur_volume_log = 9'd75;
+            6'd31 : cur_volume_log = 9'd80;
+            6'd32 : cur_volume_log = 9'd85;
+            6'd33 : cur_volume_log = 9'd90;
+            6'd34 : cur_volume_log = 9'd95;
+            6'd35 : cur_volume_log = 9'd101;
+            6'd36 : cur_volume_log = 9'd107;
+            6'd37 : cur_volume_log = 9'd113;
+            6'd38 : cur_volume_log = 9'd120;
+            6'd39 : cur_volume_log = 9'd127;
+            6'd40 : cur_volume_log = 9'd135;
+            6'd41 : cur_volume_log = 9'd143;
+            6'd42 : cur_volume_log = 9'd151;
+            6'd43 : cur_volume_log = 9'd160;
+            6'd44 : cur_volume_log = 9'd170;
+            6'd45 : cur_volume_log = 9'd180;
+            6'd46 : cur_volume_log = 9'd191;
+            6'd47 : cur_volume_log = 9'd202;
+            6'd48 : cur_volume_log = 9'd214;
+            6'd49 : cur_volume_log = 9'd227;
+            6'd50 : cur_volume_log = 9'd241;
+            6'd51 : cur_volume_log = 9'd255;
+            6'd52 : cur_volume_log = 9'd270;
+            6'd53 : cur_volume_log = 9'd286;
+            6'd54 : cur_volume_log = 9'd303;
+            6'd55 : cur_volume_log = 9'd321;
+            6'd56 : cur_volume_log = 9'd341;
+            6'd57 : cur_volume_log = 9'd361;
+            6'd58 : cur_volume_log = 9'd382;
+            6'd59 : cur_volume_log = 9'd405;
+            6'd60 : cur_volume_log = 9'd429;
+            6'd61 : cur_volume_log = 9'd455;
+            6'd62 : cur_volume_log = 9'd482;
+            6'd63 : cur_volume_log = 9'd511;
         endcase
     end
 
