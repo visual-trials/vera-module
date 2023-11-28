@@ -48,9 +48,9 @@ module psg(
     always @* begin
         case (cur_volume)
             6'd0  : cur_volume_log = 9'd0;
-            6'd1  : cur_volume_log = 9'd13;
-            6'd2  : cur_volume_log = 9'd14;
-            6'd3  : cur_volume_log = 9'd15;
+            6'd1  : cur_volume_log = 9'd4;
+            6'd2  : cur_volume_log = 9'd8;
+            6'd3  : cur_volume_log = 9'd12;
             6'd4  : cur_volume_log = 9'd16;
             6'd5  : cur_volume_log = 9'd17;
             6'd6  : cur_volume_log = 9'd18;
