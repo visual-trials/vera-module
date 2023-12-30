@@ -79,7 +79,7 @@ module addr_data(
     assign vram_addr_decr_0 = vram_addr_decr_0_r;
     assign vram_addr_decr_1 = vram_addr_decr_1_r;
     assign vram_data0 = vram_data0_r;
-    assign vram_data1 = vram_data1_r;
+    assign vram_data1 = fx_nibble_masked_reading_enabled ? (vram_addr_nib_1_r ? {4'b0, vram_data1_r[3:0]} : {vram_data1_r[7:4], 4'b0} ) : vram_data1_r;
 
     reg  [16:0] ib_addr_r,                   ib_addr_next;
     reg         ib_addr_nibble_r,            ib_addr_nibble_next;
@@ -332,6 +332,8 @@ module addr_data(
     reg  [2:0]  fx_vram_addr_1_needs_to_be_changed /* synthesis syn_keep=1 */;
     reg         fx_pixel_position_needs_to_be_updated;
     
+    wire   fx_nibble_masked_reading_enabled = fx_addr1_mode_r == MODE_AFFINE && fx_2bit_polygon_pixels_r;
+	
     wire [16:0] vram_addr             = (access_addr == 5'h03) ? vram_addr_0_r : vram_addr_1_r;
     wire is_audio_address             = (vram_addr[16:6]  == 'b11111100111);
     wire is_palette_address           = (vram_addr[16:9]  == 'b11111101);
