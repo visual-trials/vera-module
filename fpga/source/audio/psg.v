@@ -44,6 +44,8 @@ module psg(
     wire  [1:0] cur_waveform   = cur_channel_attr_r[31:30];
 
     // Logarithmic volume conversion (0.5dB per step)
+    // cur_volume_log = cur_volume * 4                     ; cur_volume < 4
+    //                = 511 * exp2((cur_volume - 63) / 12) ; cur_volume >= 4
     reg [8:0] cur_volume_log;
     always @* begin
         case (cur_volume)
