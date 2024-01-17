@@ -332,6 +332,9 @@ module layer_renderer(
     reg [4:0] xcnt_r, xcnt_next;
 
     wire [3:0] hflipped_xcnt = render_mapdata_r[2] ? ~xcnt_r[3:0] : xcnt_r[3:0];
+	// For 2bpp 8-pixels-wide tile mode we dont want bit3 of hflipped_xcnt to be 1 (but we do when its 2bpp 16-pixels-wide tile mode or 2bpp bitmap mode)
+	// So we do an AND NOT with the lowest bit of lines_per_word_minus1 (which is only a 1 for 8 pixel wide tiled mode, for 2bpp)
+    wire [3:0] hflipped_xcnt_2bpp = {hflipped_xcnt[3] &(~lines_per_word_minus1[0]), hflipped_xcnt[2:0]};
 
     // Select current pixel for 1bpp modes
     reg cur_pixel_data_1bpp;
@@ -379,7 +382,7 @@ module layer_renderer(
 
     // Select current pixel for 2bpp modes
     reg [1:0] cur_pixel_data_2bpp;
-    always @* case (hflipped_xcnt[3:0])
+    always @* case (hflipped_xcnt_2bpp[3:0])
         // Byte 0
         4'd0:  cur_pixel_data_2bpp = render_data_r[7:6];
         4'd1:  cur_pixel_data_2bpp = render_data_r[5:4];
