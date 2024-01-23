@@ -44,86 +44,88 @@ module psg(
     wire  [1:0] cur_waveform   = cur_channel_attr_r[31:30];
 
     // Logarithmic volume conversion (0.5dB per step)
-    reg [5:0] cur_volume_log;
-    always @* case (cur_volume)
-        6'd0:  cur_volume_log = 6'd0;
-        6'd1:  cur_volume_log = 6'd1;
-        6'd2:  cur_volume_log = 6'd1;
-        6'd3:  cur_volume_log = 6'd1;
-        6'd4:  cur_volume_log = 6'd2;
-        6'd5:  cur_volume_log = 6'd2;
-        6'd6:  cur_volume_log = 6'd2;
-        6'd7:  cur_volume_log = 6'd2;
-        6'd8:  cur_volume_log = 6'd2;
-        6'd9:  cur_volume_log = 6'd2;
-        6'd10: cur_volume_log = 6'd2;
-        6'd11: cur_volume_log = 6'd3;
-        6'd12: cur_volume_log = 6'd3;
-        6'd13: cur_volume_log = 6'd3;
-        6'd14: cur_volume_log = 6'd3;
-        6'd15: cur_volume_log = 6'd3;
-        6'd16: cur_volume_log = 6'd4;
-        6'd17: cur_volume_log = 6'd4;
-        6'd18: cur_volume_log = 6'd4;
-        6'd19: cur_volume_log = 6'd4;
-        6'd20: cur_volume_log = 6'd5;
-        6'd21: cur_volume_log = 6'd5;
-        6'd22: cur_volume_log = 6'd5;
-        6'd23: cur_volume_log = 6'd6;
-        6'd24: cur_volume_log = 6'd6;
-        6'd25: cur_volume_log = 6'd7;
-        6'd26: cur_volume_log = 6'd7;
-        6'd27: cur_volume_log = 6'd7;
-        6'd28: cur_volume_log = 6'd8;
-        6'd29: cur_volume_log = 6'd8;
-        6'd30: cur_volume_log = 6'd9;
-        6'd31: cur_volume_log = 6'd9;
-        6'd32: cur_volume_log = 6'd10;
-        6'd33: cur_volume_log = 6'd11;
-        6'd34: cur_volume_log = 6'd11;
-        6'd35: cur_volume_log = 6'd12;
-        6'd36: cur_volume_log = 6'd13;
-        6'd37: cur_volume_log = 6'd14;
-        6'd38: cur_volume_log = 6'd14;
-        6'd39: cur_volume_log = 6'd15;
-        6'd40: cur_volume_log = 6'd16;
-        6'd41: cur_volume_log = 6'd17;
-        6'd42: cur_volume_log = 6'd18;
-        6'd43: cur_volume_log = 6'd19;
-        6'd44: cur_volume_log = 6'd21;
-        6'd45: cur_volume_log = 6'd22;
-        6'd46: cur_volume_log = 6'd23;
-        6'd47: cur_volume_log = 6'd25;
-        6'd48: cur_volume_log = 6'd26;
-        6'd49: cur_volume_log = 6'd28;
-        6'd50: cur_volume_log = 6'd29;
-        6'd51: cur_volume_log = 6'd31;
-        6'd52: cur_volume_log = 6'd33;
-        6'd53: cur_volume_log = 6'd35;
-        6'd54: cur_volume_log = 6'd37;
-        6'd55: cur_volume_log = 6'd39;
-        6'd56: cur_volume_log = 6'd42;
-        6'd57: cur_volume_log = 6'd44;
-        6'd58: cur_volume_log = 6'd47;
-        6'd59: cur_volume_log = 6'd50;
-        6'd60: cur_volume_log = 6'd52;
-        6'd61: cur_volume_log = 6'd56;
-        6'd62: cur_volume_log = 6'd59;
-        6'd63: cur_volume_log = 6'd63;
-    endcase
+    // cur_volume_log = cur_volume * 4                     ; cur_volume < 4
+    //                = 511 * exp2((cur_volume - 63) / 12) ; cur_volume >= 4
+    reg [8:0] cur_volume_log;
+    always @* begin
+        case (cur_volume)
+            6'd0  : cur_volume_log = 9'd0;
+            6'd1  : cur_volume_log = 9'd4;
+            6'd2  : cur_volume_log = 9'd8;
+            6'd3  : cur_volume_log = 9'd12;
+            6'd4  : cur_volume_log = 9'd16;
+            6'd5  : cur_volume_log = 9'd17;
+            6'd6  : cur_volume_log = 9'd18;
+            6'd7  : cur_volume_log = 9'd20;
+            6'd8  : cur_volume_log = 9'd21;
+            6'd9  : cur_volume_log = 9'd22;
+            6'd10 : cur_volume_log = 9'd23;
+            6'd11 : cur_volume_log = 9'd25;
+            6'd12 : cur_volume_log = 9'd26;
+            6'd13 : cur_volume_log = 9'd28;
+            6'd14 : cur_volume_log = 9'd30;
+            6'd15 : cur_volume_log = 9'd31;
+            6'd16 : cur_volume_log = 9'd33;
+            6'd17 : cur_volume_log = 9'd35;
+            6'd18 : cur_volume_log = 9'd37;
+            6'd19 : cur_volume_log = 9'd40;
+            6'd20 : cur_volume_log = 9'd42;
+            6'd21 : cur_volume_log = 9'd45;
+            6'd22 : cur_volume_log = 9'd47;
+            6'd23 : cur_volume_log = 9'd50;
+            6'd24 : cur_volume_log = 9'd53;
+            6'd25 : cur_volume_log = 9'd56;
+            6'd26 : cur_volume_log = 9'd60;
+            6'd27 : cur_volume_log = 9'd63;
+            6'd28 : cur_volume_log = 9'd67;
+            6'd29 : cur_volume_log = 9'd71;
+            6'd30 : cur_volume_log = 9'd75;
+            6'd31 : cur_volume_log = 9'd80;
+            6'd32 : cur_volume_log = 9'd85;
+            6'd33 : cur_volume_log = 9'd90;
+            6'd34 : cur_volume_log = 9'd95;
+            6'd35 : cur_volume_log = 9'd101;
+            6'd36 : cur_volume_log = 9'd107;
+            6'd37 : cur_volume_log = 9'd113;
+            6'd38 : cur_volume_log = 9'd120;
+            6'd39 : cur_volume_log = 9'd127;
+            6'd40 : cur_volume_log = 9'd135;
+            6'd41 : cur_volume_log = 9'd143;
+            6'd42 : cur_volume_log = 9'd151;
+            6'd43 : cur_volume_log = 9'd160;
+            6'd44 : cur_volume_log = 9'd170;
+            6'd45 : cur_volume_log = 9'd180;
+            6'd46 : cur_volume_log = 9'd191;
+            6'd47 : cur_volume_log = 9'd202;
+            6'd48 : cur_volume_log = 9'd214;
+            6'd49 : cur_volume_log = 9'd227;
+            6'd50 : cur_volume_log = 9'd241;
+            6'd51 : cur_volume_log = 9'd255;
+            6'd52 : cur_volume_log = 9'd270;
+            6'd53 : cur_volume_log = 9'd286;
+            6'd54 : cur_volume_log = 9'd303;
+            6'd55 : cur_volume_log = 9'd321;
+            6'd56 : cur_volume_log = 9'd341;
+            6'd57 : cur_volume_log = 9'd361;
+            6'd58 : cur_volume_log = 9'd382;
+            6'd59 : cur_volume_log = 9'd405;
+            6'd60 : cur_volume_log = 9'd429;
+            6'd61 : cur_volume_log = 9'd455;
+            6'd62 : cur_volume_log = 9'd482;
+            6'd63 : cur_volume_log = 9'd511;
+        endcase
+    end
 
     //////////////////////////////////////////////////////////////////////////
     // Noise generator
     //////////////////////////////////////////////////////////////////////////
     reg [15:0] lfsr_r;
-    reg [5:0] noise_value_r;
+    wire [5:0] noise_value_r = lfsr_r[6:1];
     always @(posedge clk or posedge rst) begin
         if (rst) begin
             lfsr_r        <= 16'd1;
-            noise_value_r <= 6'd0;
         end else begin
             lfsr_r        <= {lfsr_r[14:0], lfsr_r[1] ^ lfsr_r[2] ^ lfsr_r[4] ^ lfsr_r[15]};
-            noise_value_r <= {noise_value_r[4:0], lfsr_r[0]};
         end
     end
 
@@ -171,8 +173,8 @@ module psg(
     endcase
 
     wire signed  [5:0] signed_signal = signal ^ 6'h20;
-    wire signed  [6:0] signed_volume = {1'b0, cur_volume_log};
-    wire signed [11:0] scaled_signal = signed_signal * signed_volume;
+    wire signed  [9:0] signed_volume = {1'b0, cur_volume_log};
+    wire signed [14:0] scaled_signal = signed_signal * signed_volume;
 
     //////////////////////////////////////////////////////////////////////////
     // Audio generator state machine
@@ -181,9 +183,9 @@ module psg(
     reg signed [15:0] left_accum_r,  right_accum_r;
 
     parameter
-        IDLE     = 3'b00,
-        FETCH_CH = 3'b01,
-        CALC_CH  = 3'b10;
+        IDLE     = 2'b00,
+        FETCH_CH = 2'b01,
+        CALC_CH  = 2'b10;
 
     reg [1:0] state_r;
 
@@ -229,8 +231,8 @@ module psg(
                 end
 
                 CALC_CH: begin
-                    if (cur_left_en)  left_accum_r  <= left_accum_r  + scaled_signal;
-                    if (cur_right_en) right_accum_r <= right_accum_r + scaled_signal;
+                    if (cur_left_en)  left_accum_r  <= left_accum_r  + {{4{scaled_signal[14]}}, scaled_signal[14:3]};
+                    if (cur_right_en) right_accum_r <= right_accum_r + {{4{scaled_signal[14]}}, scaled_signal[14:3]};
 
                     working_data_wridx_r <= cur_channel_r;
                     working_data_wren_r  <= 1;
