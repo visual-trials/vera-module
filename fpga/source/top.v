@@ -188,7 +188,7 @@ module top(
             case(dc_select_r)
                 6'h0: rddata = dc_hscale_r;
                 6'h1: rddata = dc_active_hstop_r[9:2];
-                default: rddata = 8'd0;
+                default: rddata = 8'd47;
             endcase
         end
         5'h0B: begin
@@ -196,7 +196,7 @@ module top(
                 6'h0: rddata = dc_vscale_r;
                 6'h1: rddata = dc_active_vstart_r[8:1];
                 6'h5: rddata = fx_fill_length_low;
-                default: rddata = 8'd47;
+                default: rddata = 8'd0;
             endcase
         end
         5'h0C: begin
