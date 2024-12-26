@@ -1,6 +1,6 @@
 //`default_nettype none
-`define VERSION_MAJOR 8'd47
-`define VERSION_MINOR 8'd1
+`define VERSION_MAJOR 8'd48
+`define VERSION_MINOR 8'd0
 `define VERSION_BUILD 8'd1
 
 module top(
